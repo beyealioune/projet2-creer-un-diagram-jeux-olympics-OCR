@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
       dataPoints.push({
         y: olympic.participations.reduce((totalMedals, participation) => totalMedals + participation.medalsCount, 0),
         label: olympic.country,
-        id: olympic.id // Supposons que l'ID du pays est stocké dans la propriété 'id'
+        id: olympic.id 
       });
     });
 
@@ -50,11 +50,14 @@ export class HomeComponent implements OnInit {
       data: [{
         type: "pie",
         startAngle: -90,
-        indexLabel: "{label}: {y}",
+        indexLabel: "{label}",
         yValueFormatString: "#,###",
+        toolTipContent: "{label}: {y} médailles",
         dataPoints: dataPoints
       }]
+      
     };
+    console.log('data',dataPoints);
 
     let chart = new CanvasJS.Chart("chartContainer", this.chartOptions);
 

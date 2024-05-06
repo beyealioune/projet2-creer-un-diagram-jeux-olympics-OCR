@@ -63,12 +63,12 @@ export class DetailComponent implements OnInit {
       };
     });
   
-    this.chartOptions.data[0].dataPoints = dataPoints.map(data => ({
-      label: data.label,
-      y: data.participations,
-      indexLabel: `Participations: ${data.participations}, Médailles: ${data.medals}, Athlètes: ${data.athletes}`
-    }));
-  }
+    this.chartOptions.data[0].dataPoints = dataPoints.flatMap(data => ([
+      { label: data.label, y: data.participations, indexLabel: `Participations: ${data.participations}` },
+      { label: data.label, y: data.medals, indexLabel: `Médailles: ${data.medals}` },
+      { label: data.label, y: data.athletes, indexLabel: `Athlètes: ${data.athletes}` }
+    ]));
+  }    
   
 
   getTotalMedals(participations: any[] | undefined): number {
