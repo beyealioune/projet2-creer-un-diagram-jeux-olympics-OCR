@@ -40,10 +40,8 @@ export class DetailComponent implements OnInit {
   }
 
   updateChartData(country: Olympic): void {
-    // Créer un objet pour stocker les données par année
     const dataByYear: { [year: number]: { participations: number, medals: number, athletes: number } } = {};
   
-    // Remplir l'objet avec les données par année
     country.participations.forEach(participation => {
       if (!dataByYear[participation.year]) {
         dataByYear[participation.year] = { participations: 0, medals: 0, athletes: 0 };

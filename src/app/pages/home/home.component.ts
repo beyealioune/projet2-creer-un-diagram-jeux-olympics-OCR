@@ -34,11 +34,9 @@ export class HomeComponent implements OnInit {
     this.olympics$.subscribe(olympics => {
       this.numberOfOlympics = olympics.length;
 
-      // Obtenir le nombre de pays uniques
       const uniqueCountries = new Set(olympics.map((olympic: Olympic) => olympic.country));
       this.numberOfCountries = uniqueCountries.size;
 
-      // Rendre le graphique avec les données
       this.renderChart(olympics);
     });
   }
@@ -54,7 +52,7 @@ export class HomeComponent implements OnInit {
       dataPoints.push({
         y: olympic.participations.reduce((totalMedals, participation) => totalMedals + participation.medalsCount, 0),
         label: olympic.country,
-        id: olympic.id.toString() // Convertir en string
+        id: olympic.id.toString() 
       });
     });
 
