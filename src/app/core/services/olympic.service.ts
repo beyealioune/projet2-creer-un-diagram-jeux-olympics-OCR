@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { Olympic } from '../models/Olympic';
 
 @Injectable({
   providedIn: 'root',
@@ -28,4 +29,15 @@ export class OlympicService {
   getOlympics() {
     return this.olympics$.asObservable();
   }
+
+  getCountryById(id: number) {
+    const olympics = this.olympics$.getValue();
+    if (olympics) {
+      return olympics.find((country: Olympic) => country.id === id);
+    } else {
+      console.error("No data available.");
+      return null; 
+    }
+  }
+  
 }
