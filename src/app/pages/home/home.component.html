@@ -1,5 +1,41 @@
-<h2>Olympic games app</h2>
-<hr />
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xs-12 col-sm-12 col-md-8 text-center">
+            <h2 class="mb-4">Olympic Game App</h2>
 
-<!-- Conteneur pour le graphique -->
-<div id="chartContainer" style="position: relative; width: 100%; height: 360px;"></div>
+        </div>
+        <hr />
+        <div class="container">
+            <!-- Nouvelle rangée pour la carte "Médailles par pays" -->
+            <div class="row justify-content-center">
+              <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="card mb-4">
+                  <div class="card-body text-center"> <!-- Utiliser la classe text-center -->
+                    <h5 class="card-title">Médailles par pays</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Rangée pour les deux cartes existantes -->
+            <div class="row justify-content-center">
+              <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <h5 class="card-title">Nombre de participations</h5>
+                    <p class="card-text">Nombre de Jeux Olympiques: {{ numberOfOlympics }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <h5 class="card-title">Nombre de participations</h5>
+                    <p class="card-text">Nombre de pays participants: {{ numberOfCountries }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+                  
+                <div id="chartContainer" style="position: relative; width: 100%; height: 360px;"></div>

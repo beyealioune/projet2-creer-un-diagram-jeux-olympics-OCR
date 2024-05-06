@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Router } from '@angular/router';
-
 import { Olympic } from 'src/app/core/models/Olympic';
+import { ChartOptions } from 'src/app/core/models/ChartOptions';
+import { DataPoint } from 'src/app/core/models/DataPoint';
 import { CanvasJS } from '@canvasjs/angular-charts';
 
 @Component({
@@ -13,16 +14,31 @@ import { CanvasJS } from '@canvasjs/angular-charts';
 })
 export class HomeComponent implements OnInit {
 
-  public olympics$: Observable<any> = of(null);
-  public chartOptions: any = {};
+  public numberOfOlympics: number = 0;
+  public numberOfCountries: number = 0;
 
-  constructor(private olympicService: OlympicService, private router: Router) {}
+  public olympics$: Observable<any> = of(null);
+  public chartOptions: ChartOptions = {
+    animationEnabled: true,
+    title: {
+      text: "Médailles par pays"
+    },
+    data: []
+  };
+
+  constructor(private olympicService: OlympicService, private router: Router) { }
 
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
-    console.log('Olympics:', this.olympics$);
 
     this.olympics$.subscribe(olympics => {
+      this.numberOfOlympics = olympics.length;
+
+      // Obtenir le nombre de pays uniques
+      const uniqueCountries = new Set(olympics.map((olympic: Olympic) => olympic.country));
+      this.numberOfCountries = uniqueCountries.size;
+
+      // Rendre le graphique avec les données
       this.renderChart(olympics);
     });
   }
@@ -33,39 +49,29 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    let dataPoints: { y: number, label: string, id: number }[] = [];
+    let dataPoints: DataPoint[] = [];
     olympics.forEach(olympic => {
       dataPoints.push({
         y: olympic.participations.reduce((totalMedals, participation) => totalMedals + participation.medalsCount, 0),
         label: olympic.country,
-        id: olympic.id 
+        id: olympic.id.toString() // Convertir en string
       });
     });
 
-    this.chartOptions = {
-      animationEnabled: true,
-      title: {
-        text: "Médailles par pays"
-      },
-      data: [{
-        type: "pie",
-        startAngle: -90,
-        indexLabel: "{label}",
-        yValueFormatString: "#,###",
-        toolTipContent: "{label}: {y} médailles",
-        dataPoints: dataPoints
-      }]
-      
-    };
-    console.log('data',dataPoints);
+    this.chartOptions.data = [{
+      type: "pie",
+      startAngle: -90,
+      indexLabel: "{label}",
+      yValueFormatString: "#,###",
+      toolTipContent: "{label}: {y} médailles",
+      dataPoints: dataPoints
+    }];
 
     let chart = new CanvasJS.Chart("chartContainer", this.chartOptions);
 
-    // Associer un événement de clic à chaque point de données
-    chart.options.data[0].dataPoints.forEach((dataPoint: any) => {
+    chart.options.data[0].dataPoints.forEach((dataPoint: DataPoint) => {
       dataPoint.click = (e: any) => {
         console.log('DataPoint clicked:', dataPoint);
-        // Rediriger vers la page de détail du pays avec son ID
         this.router.navigate(['/detail', dataPoint.id]);
       };
     });
