@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { Olympic } from '../models/Olympic';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +16,7 @@ export class OlympicService {
     return this.http.get<any>(this.olympicUrl).pipe(
       tap((value) => this.olympics$.next(value)),
       catchError((error, caught) => {
-        // TODO: improve error handling
         console.error(error);
-        // can be useful to end loading state and let the user know something went wrong
         this.olympics$.next(null);
         return caught;
       })
@@ -28,16 +25,6 @@ export class OlympicService {
 
   getOlympics() {
     return this.olympics$.asObservable();
-  }
-
-  getCountryById(id: number) {
-    const olympics = this.olympics$.getValue();
-    if (olympics) {
-      return olympics.find((country: Olympic) => country.id === id);
-    } else {
-      console.error("No data available.");
-      return null; 
-    }
   }
   
 }
