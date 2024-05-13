@@ -1,7 +1,7 @@
 export interface DataPoint {
     y: number;
     label: string;
-    id: string;
+    id?: string;
     click?: (e: any) => void; 
   }
 

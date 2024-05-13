@@ -14,10 +14,10 @@ import { CanvasJS } from '@canvasjs/angular-charts';
 })
 export class HomeComponent implements OnInit {
 
-  public numberOfOlympics: number = 0;
-  public numberOfCountries: number = 0;
+  public numberOfOlympics: number | undefined = 0;
+  public numberOfCountries: number | undefined = 0;
 
-  public olympics$: Observable<any> = of(null);
+  public olympics$: Observable<Olympic[] | null> = of(null);
   public chartOptions: ChartOptions = {
     animationEnabled: true,
     title: {
@@ -32,12 +32,12 @@ export class HomeComponent implements OnInit {
     this.olympics$ = this.olympicService.getOlympics();
 
     this.olympics$.subscribe(olympics => {
-      this.numberOfOlympics = olympics.length;
+      this.numberOfOlympics = olympics?.length;
 
-      const uniqueCountries = new Set(olympics.map((olympic: Olympic) => olympic.country));
+      const uniqueCountries = new Set(olympics?.map((olympic: Olympic) => olympic.country));
       this.numberOfCountries = uniqueCountries.size;
 
-      this.renderChart(olympics);
+      this.renderChart(olympics ?? []);
     });
   }
 
@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit {
     let chart = new CanvasJS.Chart("chartContainer", this.chartOptions);
 
     chart.options.data[0].dataPoints.forEach((dataPoint: DataPoint) => {
-      dataPoint.click = (e: any) => {
+      dataPoint.click = (e: MouseEvent) => {
         console.log('DataPoint clicked:', dataPoint);
         this.router.navigate(['/detail', dataPoint.id]);
       };

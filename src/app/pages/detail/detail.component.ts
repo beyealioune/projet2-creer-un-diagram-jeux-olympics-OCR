@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { ChartOptions } from 'src/app/core/models/ChartOptions';
 import { Olympic } from 'src/app/core/models/Olympic';
+import { Participation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -13,7 +15,7 @@ export class DetailComponent implements OnInit {
   country!: Olympic ;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  public chartOptions: any = {
+  public chartOptions: ChartOptions = {
     title: {
       text: "Détails par pays"
     },
@@ -67,26 +69,26 @@ export class DetailComponent implements OnInit {
     const dataPoints = Object.keys(dataByYear).map(year => {
       const numYear = parseInt(year, 10);
       return {
-        label: numYear,
+        label: numYear.toString(), 
         participations: dataByYear[numYear].participations,
         medals: dataByYear[numYear].medals,
         athletes: dataByYear[numYear].athletes
       };
     });
-  
+    
     this.chartOptions.data[0].dataPoints = dataPoints.flatMap(data => ([
       { label: data.label, y: data.participations, indexLabel: `Participations: ${data.participations}` },
       { label: data.label, y: data.medals, indexLabel: `Médailles: ${data.medals}` },
       { label: data.label, y: data.athletes, indexLabel: `Athlètes: ${data.athletes}` }
     ]));
-  }    
+  }
   
 
-  getTotalMedals(participations: any[] | undefined): number {
+  getTotalMedals(participations: Participation[] | undefined): number {
     return participations ? participations.reduce((total, participation) => total + participation.medalsCount, 0) : 0;
   }
 
-  getTotalAthletes(participations: any[] | undefined): number {
+  getTotalAthletes(participations: Participation[] | undefined): number {
     return participations ? participations.reduce((total, participation) => total + participation.athleteCount, 0) : 0;
   } 
 }
