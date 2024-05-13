@@ -9,7 +9,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit {
-  country!: Olympic;
+  country!: any;
   public chartOptions: any = {
     title: {
       text: "Détails par pays"
