@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
@@ -10,6 +11,8 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class DetailComponent implements OnInit {
   country!: Olympic ;
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   public chartOptions: any = {
     title: {
       text: "Détails par pays"
@@ -27,16 +30,26 @@ export class DetailComponent implements OnInit {
     const idParamString = this.route.snapshot.paramMap.get('id');
     if (idParamString) {
       const idParam = parseInt(idParamString, 10);
-      this.olympicService.getOlympics().subscribe(olympics => {
-        this.country = olympics.find((country: Olympic) => country.id === idParam);
-        if (this.country) {
-          this.updateChartData(this.country);
-          console.log('Country:', this.country);
-        }
-      });
+      this.olympicService.getOlympics()
+        .pipe(
+          takeUntil(this.unsubscribe$) 
+        )
+        .subscribe(olympics => {
+          this.country = olympics.find((country: Olympic) => country.id === idParam);
+          if (this.country) {
+            this.updateChartData(this.country);
+            console.log('Country:', this.country);
+          }
+        }, error => {
+          console.error('Error occurred:', error);
+        });
     } else {
       console.error('ID Param is null');
     }
+  }
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   updateChartData(country: Olympic): void {
