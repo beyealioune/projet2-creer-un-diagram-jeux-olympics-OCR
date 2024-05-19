@@ -12,7 +12,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit {
-  country!: Olympic ;
+  country!: Olympic | undefined;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   public chartOptions: ChartOptions = {
@@ -37,7 +37,7 @@ export class DetailComponent implements OnInit {
           takeUntil(this.unsubscribe$) 
         )
         .subscribe(olympics => {
-          this.country = olympics.find((country: Olympic) => country.id === idParam);
+          this.country = olympics?.find((country: Olympic) => country.id === idParam);
           if (this.country) {
             this.updateChartData(this.country);
             console.log('Country:', this.country);
